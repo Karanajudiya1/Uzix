@@ -1,0 +1,1199 @@
+import React, { useState, useEffect } from 'react';
+
+const Icons = {
+  Camera: () => (
+    <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+    </svg>
+  ),
+  Cpu: () => (
+    <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M12 3v1.5m3.75-1.5v1.5M8.25 19.5V21M12 19.5V21m3.75-1.5V21m-12-11.25h1.5m15 0h1.5m-18 3.75h1.5m15 0h1.5m-15 3.75h1.5m15 0h1.5m-15-11.25H6a2.25 2.25 0 00-2.25 2.25v7.5A2.25 2.25 0 006 18h12a2.25 2.25 0 002.25-2.25v-7.5A2.25 2.25 0 0018 6.75h-2.25" />
+    </svg>
+  ),
+  Image: () => (
+    <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.9 2.9m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375 0 11-.75 0 .375 0 01.75 0z" />
+    </svg>
+  ),
+  Mail: () => (
+    <svg className="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+    </svg>
+  ),
+  Sliders: () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+    </svg>
+  ),
+  ChevronRight: () => (
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+    </svg>
+  ),
+  Star: ({ filled }) => (
+    <svg className={`w-5 h-5 ${filled ? 'text-amber-400 fill-amber-400' : 'text-neutral-500'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499c.172-.436.782-.436.954 0l2.22 4.507 4.96.721c.479.07.67.659.324.996l-3.59 3.498 1.05 4.938c.101.474-.4.82-.818.598L12 18.754l-4.42 2.324c-.418.22-.92-.126-.818-.598l1.05-4.938-3.59-3.498c-.347-.337-.156-.926.324-.996l4.96-.721 2.22-4.507z" />
+    </svg>
+  ),
+  Sparkles: () => (
+    <svg className="w-5 h-5 animate-pulse text-amber-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 21l-.813-5.096L3 15l5.096-.813L9 9l.813 5.096L15 15l-5.096.813zM18.187 7.904L17.375 13l-.813-5.096L11.5 7l5.062-.813L17.375 1l.813 5.187L23 7l-4.813.904z" />
+    </svg>
+  ),
+  MapPin: () => (
+    <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+    </svg>
+  ),
+  Phone: () => (
+    <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.824-1.502-5.118-3.796-6.622-6.622l1.293-.97a1.203 1.203 0 00.417-1.174L6.07 3.01A1.201 1.201 0 004.978 2.158H3.606A2.25 2.25 0 001.356 4.41c.074.831.374 2.13 1.25 4.59z" />
+    </svg>
+  ),
+  Clock: () => (
+    <svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  Loader: () => (
+    <svg className="w-6 h-6 animate-spin text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+    </svg>
+  ),
+  Close: () => (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  )
+};
+
+const GALLERY_ITEMS = [
+  {
+    id: 1,
+    title: "Celestial Ridge",
+    category: "Landscape",
+    description: "Deep exposure captures the Milky Way galaxy framing the sharp granite peaks of Yosemite Valley.",
+    url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    settings: { aperture: "f/2.8", shutter: "25s", iso: "3200", lens: "14mm" }
+  },
+  {
+    id: 2,
+    title: "Ethereal Gaze",
+    category: "Portrait",
+    description: "A soft studio light setup prioritizing the dramatic emotional detail captured in natural eye reflection.",
+    url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80",
+    settings: { aperture: "f/1.4", shutter: "1/250s", iso: "100", lens: "85mm" }
+  },
+  {
+    id: 3,
+    title: "Neon Rainfalls",
+    category: "Street",
+    description: "Reflections of neon signage across rain-slicked asphalt in Shibuya, Tokyo.",
+    url: "https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1200&q=80",
+    settings: { aperture: "f/2.0", shutter: "1/125s", iso: "800", lens: "35mm" }
+  },
+  {
+    id: 4,
+    title: "Apex Monarch",
+    category: "Wildlife",
+    description: "A close-up portrait of a male lion scanning the Serengeti plains during late golden hour.",
+    url: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?auto=format&fit=crop&w=1200&q=80",
+    settings: { aperture: "f/4.0", shutter: "1/800s", iso: "400", lens: "400mm" }
+  },
+  {
+    id: 5,
+    title: "Misty Valleys",
+    category: "Landscape",
+    description: "First light pierces dense fog blanketing the ancient pine forests of the Dolomites.",
+    url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+    settings: { aperture: "f/8.0", shutter: "1/60s", iso: "100", lens: "24mm" }
+  },
+  {
+    id: 6,
+    title: "Sculpted Shadows",
+    category: "Portrait",
+    description: "High-contrast chiaroscuro portrait demonstrating dramatic shape and form with single light source.",
+    url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80",
+    settings: { aperture: "f/1.8", shutter: "1/160s", iso: "200", lens: "50mm" }
+  }
+];
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [lightboxImage, setLightboxImage] = useState(null);
+  
+  const [aperture, setAperture] = useState(2.8);
+  const [shutterSpeed, setShutterSpeed] = useState(125);
+  const [iso, setIso] = useState(200);
+  const [focalLength, setFocalLength] = useState(50);
+  const [simulatedSubject, setSimulatedSubject] = useState('portrait');
+
+  const [selectedCritiqueImage, setSelectedCritiqueImage] = useState(GALLERY_ITEMS[0]);
+  const [customPrompt, setCustomPrompt] = useState("");
+  const [aiResponse, setAiResponse] = useState("");
+  const [isAiLoading, setIsAiLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
+
+  const [contactForm, setContactForm] = useState({ name: "", email: "", tier: "Standard Studio", details: "" });
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
+
+  const getAiCritique = async () => {
+    setIsAiLoading(true);
+    setErrorMessage("");
+    setAiResponse("");
+
+    const apiKey = ""; 
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+    const promptMessage = `
+      You are an elite, award-winning photography critique assistant.
+      Critique the following image setup based on its artistic description, title, and technical settings:
+      
+      Image Title: "${selectedCritiqueImage.title}"
+      Category: ${selectedCritiqueImage.category}
+      Description: ${selectedCritiqueImage.description}
+      Camera Settings: Aperture: ${selectedCritiqueImage.settings.aperture}, Shutter: ${selectedCritiqueImage.settings.shutter}, ISO: ${selectedCritiqueImage.settings.iso}, Lens: ${selectedCritiqueImage.settings.lens}
+      
+      User's Custom Question or Focus area: "${customPrompt || "Provide a general critical breakdown of this artistic style, camera setting choice, and technical mastery."}"
+      
+      Structure your response elegantly in clear sections using basic markdown format:
+      1. TECHNICAL REVIEW (Evaluate if settings match the mood & environment)
+      2. COMPOSITION & LIGHTING (Discuss geometry, shadows, framing)
+      3. CRITICAL SUGGESTION (Propose a professional improvement or alternative setting to try)
+    `;
+
+    let attempts = 0;
+    const maxAttempts = 3;
+    let delay = 1000;
+
+    const runCall = async () => {
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptMessage }] }],
+            systemInstruction: {
+              parts: [{ text: "You are a professional world-class photographer critique and portfolio mentor. Always respond with encouraging yet highly detailed, constructive technical feedback." }]
+            }
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const extractedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        
+        if (extractedText) {
+          setAiResponse(extractedText);
+        } else {
+          throw new Error("Unable to parse API response structure.");
+        }
+      } catch (err) {
+        if (attempts < maxAttempts) {
+          attempts++;
+          await new Promise(resolve => setTimeout(resolve, delay));
+          delay *= 1.5;
+          await runCall();
+        } else {
+          setErrorMessage("Gemini API connection error. Please verify the environment state or try again in a moment.");
+        }
+      }
+    };
+
+    await runCall();
+    setIsAiLoading(false);
+  };
+
+  const calculateExposureValue = () => {
+    const apertureFactor = Math.log2(Math.pow(aperture, 2));
+    const shutterFactor = Math.log2(shutterSpeed);
+    const isoFactor = Math.log2(iso / 100);
+    
+    const relativeBalance = (isoFactor + 7) - (apertureFactor + shutterFactor);
+    return relativeBalance;
+  };
+
+  const getSimulatedStyle = () => {
+    const exposureDiff = calculateExposureValue();
+    let brightness = 100 + (exposureDiff * 15);
+    brightness = Math.max(10, Math.min(brightness, 250)); 
+
+    let blur = 0;
+    if (simulatedSubject === 'portrait') {
+      blur = Math.max(0, (8 - aperture) * 1.5);
+    } else {
+      blur = Math.max(0, (8 - aperture) * 0.4);
+    }
+
+    const noiseOpacity = Math.min(0.8, Math.max(0, (iso - 100) / 7000));
+    const zoomScale = 1 + ((focalLength - 24) / 176) * 0.5;
+
+    return {
+      filter: `brightness(${brightness}%) blur(${blur}px)`,
+      transform: `scale(${zoomScale})`,
+      noiseOpacity,
+      brightness,
+      blur
+    };
+  };
+
+  const simSettings = getSimulatedStyle();
+
+  return (
+    <div className="min-h-screen bg-neutral-950 text-neutral-100 font-sans selection:bg-amber-500 selection:text-black">
+      
+      {/* Dynamic Luxury Navigation Bar */}
+      <header className="sticky top-0 z-40 bg-neutral-950/95 backdrop-blur-md border-b border-neutral-900 px-4 py-3 md:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('home')}>
+            <span className="p-2 bg-amber-500 text-black rounded-lg transition-transform hover:rotate-12 duration-300">
+              <Icons.Camera />
+            </span>
+            <div>
+              <span className="font-extrabold tracking-wider text-xl block uppercase">Aperture</span>
+              <span className="text-xs text-amber-500 tracking-widest block uppercase -mt-1 font-semibold">Visual Studio</span>
+            </div>
+          </div>
+
+          {/* Desktop Nav Links */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <button 
+              onClick={() => setActiveTab('home')} 
+              className={`text-sm font-medium uppercase tracking-widest transition-colors ${activeTab === 'home' ? 'text-amber-400' : 'text-neutral-400 hover:text-white'}`}
+            >
+              Exhibition
+            </button>
+            <button 
+              onClick={() => setActiveTab('simulator')} 
+              className={`text-sm font-medium uppercase tracking-widest transition-colors flex items-center space-x-2 ${activeTab === 'simulator' ? 'text-amber-400' : 'text-neutral-400 hover:text-white'}`}
+            >
+              <Icons.Sliders /> <span>DSLR Sandbox</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab('critique')} 
+              className={`text-sm font-medium uppercase tracking-widest transition-colors flex items-center space-x-2 ${activeTab === 'critique' ? 'text-amber-400' : 'text-neutral-400 hover:text-white'}`}
+            >
+              <Icons.Sparkles /> <span>Gemini Mentor</span>
+            </button>
+            <button 
+              onClick={() => setActiveTab('contact')} 
+              className={`text-sm font-medium uppercase tracking-widest transition-colors ${activeTab === 'contact' ? 'text-amber-400' : 'text-neutral-400 hover:text-white'}`}
+            >
+              About & Contact
+            </button>
+          </nav>
+
+          {/* Mobile Fast CTAs */}
+          <div className="flex md:hidden space-x-3">
+            <button 
+              onClick={() => setActiveTab('simulator')} 
+              className={`p-2 rounded-full ${activeTab === 'simulator' ? 'bg-amber-500 text-black' : 'bg-neutral-900 text-neutral-300'}`}
+              title="DSLR Simulator"
+            >
+              <Icons.Sliders />
+            </button>
+            <button 
+              onClick={() => setActiveTab('critique')} 
+              className={`p-2 rounded-full ${activeTab === 'critique' ? 'bg-amber-500 text-black' : 'bg-neutral-900 text-neutral-300'}`}
+              title="Gemini Mentor"
+            >
+              <Icons.Cpu />
+            </button>
+            <button 
+              onClick={() => setActiveTab('contact')} 
+              className={`p-2 rounded-full ${activeTab === 'contact' ? 'bg-amber-500 text-black' : 'bg-neutral-900 text-neutral-300'}`}
+              title="About & Contact"
+            >
+              <Icons.Mail />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Banner Section */}
+      {activeTab === 'home' && (
+        <section className="relative overflow-hidden py-20 px-4 md:px-8 border-b border-neutral-900">
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-purple-500/5 pointer-events-none" />
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 bg-neutral-900 border border-neutral-800 rounded-full text-xs text-amber-400">
+                <Icons.Sparkles />
+                <span>Exquisite Composition & Modern Visual Sandbox</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight uppercase">
+                Chasing Light.<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-white">
+                  Defining Detail.
+                </span>
+              </h1>
+              <p className="text-neutral-400 text-lg max-w-xl">
+                A premium, immersive exhibition of award-winning moments paired with a fully-featured camera exposure simulator and next-gen AI critiques to help you master photography.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <button 
+                  onClick={() => setActiveTab('simulator')} 
+                  className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-black font-semibold rounded-lg tracking-wider uppercase text-sm transition-all duration-300 transform hover:-translate-y-1 shadow-lg shadow-amber-500/20"
+                >
+                  Launch DSLR Sandbox
+                </button>
+                <button 
+                  onClick={() => setActiveTab('critique')} 
+                  className="px-6 py-3 bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 text-neutral-200 font-semibold rounded-lg tracking-wider uppercase text-sm transition-all"
+                >
+                  Try Gemini Critique
+                </button>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 relative">
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900 group shadow-2xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80" 
+                  alt="Featured Hero Shot" 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/20 to-transparent flex flex-col justify-end p-6">
+                  <span className="text-xs uppercase tracking-widest text-amber-400 font-bold">Featured Concept</span>
+                  <h3 className="text-xl font-bold mt-1">Dolomites Fog Horizon</h3>
+                  <p className="text-xs text-neutral-400 mt-2">f/8.0 • 1/60s • ISO 100 • 24mm Lens</p>
+                </div>
+              </div>
+              <div className="absolute -bottom-6 -right-6 p-4 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl hidden sm:block">
+                <div className="text-xs text-neutral-400">Captured On</div>
+                <div className="font-bold text-amber-400 text-sm">Sony α7R V + 24-70mm GM II</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Main Exhibition Page */}
+      {activeTab === 'home' && (
+        <main className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <span className="text-amber-500 font-bold uppercase tracking-widest text-xs">Exhibition</span>
+              <h2 className="text-3xl md:text-4xl font-extrabold mt-1 tracking-tight">PORTFOLIO COLLECTIONS</h2>
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              {['All', 'Landscape', 'Portrait', 'Street', 'Wildlife'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${
+                    selectedCategory === cat 
+                    ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/15' 
+                    : 'bg-neutral-900 text-neutral-400 hover:text-white hover:bg-neutral-850'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {GALLERY_ITEMS
+              .filter(item => selectedCategory === 'All' || item.category === selectedCategory)
+              .map((item) => (
+                <div 
+                  key={item.id}
+                  className="bg-neutral-900 rounded-2xl overflow-hidden border border-neutral-800 flex flex-col group hover:border-neutral-700 transition-all duration-350 cursor-pointer"
+                  onClick={() => setLightboxImage(item)}
+                >
+                  <div className="relative aspect-[4/3] bg-neutral-950 overflow-hidden">
+                    <img 
+                      src={item.url} 
+                      alt={item.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-3 left-3 bg-neutral-950/85 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest text-amber-400 border border-neutral-850">
+                      {item.category}
+                    </div>
+                  </div>
+
+                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                    <div>
+                      <h3 className="text-xl font-bold tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-neutral-400 mt-2 line-clamp-2 leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] text-neutral-500 border-t border-neutral-850 pt-3">
+                      <span>{item.settings.lens}</span>
+                      <span className="font-mono bg-neutral-950 px-2 py-0.5 rounded text-neutral-400">
+                        {item.settings.aperture} • {item.settings.shutter} • ISO {item.settings.iso}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+            ))}
+          </div>
+
+          <div className="mt-20 p-8 rounded-2xl bg-gradient-to-br from-neutral-900 to-neutral-950 border border-neutral-800 text-center space-y-4 relative overflow-hidden">
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+            <h3 className="text-2xl font-bold text-white tracking-tight">Curious about compositional rules of these photos?</h3>
+            <p className="text-neutral-400 max-w-lg mx-auto text-sm leading-relaxed">
+              Use our live Gemini Professional Critique Mentor to evaluate any of our exhibition items or request specific feedback.
+            </p>
+            <div className="pt-2">
+              <button 
+                onClick={() => setActiveTab('critique')} 
+                className="px-6 py-2.5 bg-neutral-800 hover:bg-neutral-700 text-white font-semibold rounded-lg text-xs uppercase tracking-widest transition-all"
+              >
+                Launch Mentor Studio
+              </button>
+            </div>
+          </div>
+        </main>
+      )}
+
+      {/* DSLR Interactive Camera Simulator */}
+      {activeTab === 'simulator' && (
+        <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <span className="text-amber-500 font-bold uppercase tracking-widest text-xs">Sandbox</span>
+            <h1 className="text-3xl md:text-5xl font-extrabold mt-1 tracking-tight">DSLR EXPOSURE SIMULATOR</h1>
+            <p className="text-neutral-400 text-sm max-w-xl mx-auto mt-2 leading-relaxed">
+              Manually calibrate Aperture, Shutter Speed, and ISO to understand exposure balance, depth of field, and optical sensor physics.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            {/* LEFT: Live Interactive Preview Screen */}
+            <div className="lg:col-span-7 flex flex-col space-y-4">
+              <div className="relative aspect-[16/10] bg-black rounded-2xl overflow-hidden border border-neutral-800 shadow-xl">
+                
+                <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
+                  
+                  {simulatedSubject === 'portrait' ? (
+                    <div className="absolute inset-0 overflow-hidden">
+                      <img 
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80" 
+                        alt="Background Separation" 
+                        className="absolute inset-0 w-full h-full object-cover transition-all"
+                        style={{ filter: `blur(${simSettings.blur}px)` }}
+                      />
+                      <img 
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80" 
+                        alt="Sharp Subject" 
+                        className="absolute inset-0 w-full h-full object-cover transition-all opacity-95"
+                        style={{ 
+                          filter: `brightness(${simSettings.brightness}%)`, 
+                          transform: simSettings.transform,
+                          clipPath: 'circle(35% at 50% 48%)' 
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 overflow-hidden">
+                      <img 
+                        src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80" 
+                        alt="Simulated Landscape" 
+                        className="w-full h-full object-cover transition-all"
+                        style={{ 
+                          filter: simSettings.filter,
+                          transform: simSettings.transform 
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  <div 
+                    className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,black_90%)] pointer-events-none"
+                    style={{ opacity: 0.6 }} 
+                  />
+                  
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden mix-blend-overlay" style={{ opacity: simSettings.noiseOpacity }}>
+                    <svg className="w-full h-full">
+                      <filter id="noiseFilter">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="4" stitchTiles="stitch" />
+                        <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 1 0" />
+                      </filter>
+                      <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+                    </svg>
+                  </div>
+
+                  <div className="absolute inset-0 border-[16px] border-black/35 pointer-events-none flex flex-col justify-between p-6">
+                    <div className="flex justify-between items-start">
+                      <div className="text-white text-[10px] font-mono tracking-widest bg-black/50 px-2 py-0.5 rounded">
+                        RAW • L
+                      </div>
+                      <div className="text-amber-500 text-[10px] font-mono tracking-widest bg-black/50 px-2 py-0.5 rounded">
+                        AF-C • SINGLE
+                      </div>
+                    </div>
+
+                    <div className="self-center w-24 h-24 border border-dashed border-neutral-300/40 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-red-500/65 rounded-full" />
+                    </div>
+
+                    <div className="flex justify-between items-end">
+                      <div className="text-white text-[11px] font-mono bg-black/70 px-2 py-1 rounded flex items-center space-x-1">
+                        <span className="text-neutral-400">EV Balance:</span> 
+                        <span className={calculateExposureValue() > 1.5 ? 'text-red-400 font-bold' : calculateExposureValue() < -1.5 ? 'text-blue-400 font-bold' : 'text-green-400 font-bold'}>
+                          {calculateExposureValue().toFixed(1)}
+                        </span>
+                      </div>
+                      <div className="text-amber-400 text-xs font-mono font-bold bg-black/75 px-3 py-1 rounded">
+                        {simulatedSubject.toUpperCase()} SCENE
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setSimulatedSubject('portrait')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${simulatedSubject === 'portrait' ? 'bg-amber-500 text-black' : 'bg-neutral-900 text-neutral-400 hover:text-white'}`}
+                >
+                  Portrait Subject (Shallow DOF)
+                </button>
+                <button
+                  onClick={() => setSimulatedSubject('landscape')}
+                  className={`flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${simulatedSubject === 'landscape' ? 'bg-amber-500 text-black' : 'bg-neutral-900 text-neutral-400 hover:text-white'}`}
+                >
+                  Landscape Subject (Wide Focus)
+                </button>
+              </div>
+            </div>
+
+            {/* RIGHT: Calibration Settings Panel */}
+            <div className="lg:col-span-5 bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-6">
+              <h2 className="text-xl font-bold tracking-tight text-white border-b border-neutral-800 pb-3 uppercase">
+                Exposure Console
+              </h2>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-300 font-medium flex items-center space-x-2">
+                    <span className="w-2.5 h-2.5 bg-neutral-400 rounded-full" />
+                    <span>Aperture (f-stop)</span>
+                  </span>
+                  <span className="font-mono text-amber-400 font-bold">f/{aperture}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="1.4" 
+                  max="16" 
+                  step="0.2" 
+                  value={aperture}
+                  onChange={(e) => setAperture(parseFloat(e.target.value))}
+                  className="w-full accent-amber-500 bg-neutral-950 h-2 rounded-lg cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-neutral-500">
+                  <span>f/1.4 (Blurry BG)</span>
+                  <span>f/16 (Sharp BG)</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-300 font-medium flex items-center space-x-2">
+                    <span className="w-2.5 h-2.5 bg-neutral-400 rounded-full" />
+                    <span>Shutter Speed (sec)</span>
+                  </span>
+                  <span className="font-mono text-amber-400 font-bold">1/{shutterSpeed}s</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="2" 
+                  max="2000" 
+                  step="10"
+                  value={shutterSpeed}
+                  onChange={(e) => setShutterSpeed(parseInt(e.target.value))}
+                  className="w-full accent-amber-500 bg-neutral-950 h-2 rounded-lg cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-neutral-500">
+                  <span>1/2s (Motion Blur)</span>
+                  <span>1/2000s (Action Freeze)</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-300 font-medium flex items-center space-x-2">
+                    <span className="w-2.5 h-2.5 bg-neutral-400 rounded-full" />
+                    <span>ISO Sensitivity</span>
+                  </span>
+                  <span className="font-mono text-amber-400 font-bold">{iso}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="100" 
+                  max="6400" 
+                  step="50"
+                  value={iso}
+                  onChange={(e) => setIso(parseInt(e.target.value))}
+                  className="w-full accent-amber-500 bg-neutral-950 h-2 rounded-lg cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-neutral-500">
+                  <span>ISO 100 (Cleanest)</span>
+                  <span>ISO 6400 (Very Noisy)</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-neutral-300 font-medium flex items-center space-x-2">
+                    <span className="w-2.5 h-2.5 bg-neutral-400 rounded-full" />
+                    <span>Focal Length (Lens Zoom)</span>
+                  </span>
+                  <span className="font-mono text-amber-400 font-bold">{focalLength}mm</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="24" 
+                  max="200" 
+                  value={focalLength}
+                  onChange={(e) => setFocalLength(parseInt(e.target.value))}
+                  className="w-full accent-amber-500 bg-neutral-950 h-2 rounded-lg cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-neutral-500">
+                  <span>24mm (Wide Horizon)</span>
+                  <span>200mm (Compressed Telephoto)</span>
+                </div>
+              </div>
+
+              <div className="p-4 bg-neutral-950 rounded-xl border border-neutral-850 space-y-3">
+                <span className="text-xs uppercase tracking-widest text-neutral-400 block font-bold">Optical Physics Feedback</span>
+                
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="p-2 bg-neutral-900 rounded">
+                    <div className="text-neutral-500">Depth of Field</div>
+                    <div className="font-semibold mt-1 text-white">
+                      {aperture <= 2.8 ? 'Shallow (Portrait Pop)' : aperture <= 8 ? 'Moderate Depth' : 'Deep (Everything Sharp)'}
+                    </div>
+                  </div>
+                  <div className="p-2 bg-neutral-900 rounded">
+                    <div className="text-neutral-500">Sensor Grain</div>
+                    <div className="font-semibold mt-1 text-white">
+                      {iso <= 400 ? 'Crystal Clean' : iso <= 1600 ? 'Slight Grain' : 'High Noise Artifacts'}
+                    </div>
+                  </div>
+                  <div className="p-2 bg-neutral-900 rounded col-span-2 text-center">
+                    <div className="text-neutral-500">Exposure State Rating</div>
+                    <div className={`font-extrabold mt-1 uppercase ${
+                      calculateExposureValue() > 1.5 ? 'text-red-400' : 
+                      calculateExposureValue() < -1.5 ? 'text-blue-400' : 
+                      'text-green-400'
+                    }`}>
+                      {calculateExposureValue() > 1.5 ? '🔥 Overexposed (Too Bright)' : 
+                       calculateExposureValue() < -1.5 ? '🌑 Underexposed (Too Dark)' : 
+                       '🎯 Perfectly Balanced Exposure'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Gemini AI Mentor Studio */}
+      {activeTab === 'critique' && (
+        <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
+          <div className="mb-10 text-center">
+            <span className="text-amber-500 font-bold uppercase tracking-widest text-xs">AI Photography Expert</span>
+            <h1 className="text-3xl md:text-5xl font-extrabold mt-1 tracking-tight">GEMINI PORTFOLIO MENTOR</h1>
+            <p className="text-neutral-400 text-sm max-w-xl mx-auto mt-2 leading-relaxed">
+              Select one of our award-winning gallery exhibits below, choose your specific question, and get a professional critical critique generated on-the-fly by Google Gemini.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <div className="lg:col-span-5 space-y-6">
+              
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4">
+                <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400">
+                  Step 1: Choose Artwork for Critique
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {GALLERY_ITEMS.map((item) => (
+                    <button 
+                      key={item.id}
+                      onClick={() => {
+                        setSelectedCritiqueImage(item);
+                        setAiResponse(""); 
+                      }}
+                      className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${selectedCritiqueImage.id === item.id ? 'border-amber-500 scale-95 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                    >
+                      <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+
+                <div className="p-3 bg-neutral-950 rounded-xl border border-neutral-850 flex items-center space-x-3">
+                  <div className="w-12 h-12 rounded overflow-hidden flex-shrink-0">
+                    <img src={selectedCritiqueImage.url} alt="selected" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-white">{selectedCritiqueImage.title}</h4>
+                    <p className="text-[10px] text-neutral-400 font-mono mt-0.5">
+                      {selectedCritiqueImage.settings.aperture} • {selectedCritiqueImage.settings.shutter} • {selectedCritiqueImage.settings.lens}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-5 space-y-4">
+                <label className="block text-xs font-bold uppercase tracking-widest text-neutral-400">
+                  Step 2: Focus the AI Mentor Focus Area
+                </label>
+                <textarea 
+                  value={customPrompt}
+                  onChange={(e) => setCustomPrompt(e.target.value)}
+                  placeholder="e.g. Do you think the high shutter speed here compromises shadow details? Or is the composition balanced well with the rule of thirds?"
+                  rows={4}
+                  className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-3 text-sm text-neutral-150 focus:outline-none focus:border-amber-500"
+                />
+                
+                <div className="flex flex-wrap gap-1.5">
+                  <button 
+                    onClick={() => setCustomPrompt("Critique the lighting style and balance.")}
+                    className="px-2.5 py-1 bg-neutral-950 hover:bg-neutral-850 rounded text-[10px] text-neutral-400"
+                  >
+                    💡 Light & Shadows
+                  </button>
+                  <button 
+                    onClick={() => setCustomPrompt("How could the composition be improved to emphasize the depth?")}
+                    className="px-2.5 py-1 bg-neutral-950 hover:bg-neutral-850 rounded text-[10px] text-neutral-400"
+                  >
+                    💡 Spatial Composition
+                  </button>
+                  <button 
+                    onClick={() => setCustomPrompt("Analyze if the lens selection and aperture was optimal for this scene.")}
+                    className="px-2.5 py-1 bg-neutral-950 hover:bg-neutral-850 rounded text-[10px] text-neutral-400"
+                  >
+                    💡 Optical Suitability
+                  </button>
+                </div>
+
+                <div className="text-[10px] text-neutral-500 italic bg-neutral-950/40 p-2.5 rounded-lg border border-neutral-850/50">
+                  Note: The environment provides the secure Google Gemini key automatically at runtime.
+                </div>
+
+                <button
+                  onClick={getAiCritique}
+                  disabled={isAiLoading}
+                  className="w-full py-3 bg-amber-500 hover:bg-amber-400 disabled:bg-neutral-800 disabled:text-neutral-500 text-black font-bold uppercase tracking-widest text-xs rounded-xl flex items-center justify-center space-x-2 transition-all shadow-lg"
+                >
+                  {isAiLoading ? (
+                    <>
+                      <Icons.Loader />
+                      <span>Asking Gemini Mentor...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Icons.Cpu />
+                      <span>Initiate Gemini Critique</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+            </div>
+
+            <div className="lg:col-span-7 bg-neutral-900 border border-neutral-800 rounded-2xl p-6 min-h-[450px] flex flex-col justify-between">
+              
+              <div className="border-b border-neutral-800 pb-4 mb-4 flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-white uppercase tracking-tight">AI Critique Workspace</h3>
+                  <p className="text-xs text-neutral-400">Powered by Gemini 2.5 Flash</p>
+                </div>
+                <Icons.Sparkles />
+              </div>
+
+              <div className="flex-1 overflow-y-auto space-y-4">
+                {isAiLoading ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center space-y-3 py-20">
+                    <Icons.Loader />
+                    <div className="text-sm text-neutral-400 font-mono animate-pulse">
+                      Analyzing pixels and camera settings...
+                    </div>
+                  </div>
+                ) : errorMessage ? (
+                  <div className="p-4 bg-red-950/50 border border-red-800 text-red-200 text-sm rounded-xl">
+                    {errorMessage}
+                  </div>
+                ) : aiResponse ? (
+                  <div className="prose prose-invert max-w-none text-neutral-300 space-y-4 text-sm leading-relaxed whitespace-pre-line">
+                    {aiResponse}
+                  </div>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-center py-20 text-neutral-500 space-y-3">
+                    <Icons.Image />
+                    <div>
+                      <p className="text-sm font-semibold">Workspace is currently empty</p>
+                      <p className="text-xs max-w-xs mx-auto mt-1">
+                        Select an exhibition image on the left and hit "Initiate Gemini Critique" to see the expert evaluation here.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {aiResponse && (
+                <div className="mt-6 pt-4 border-t border-neutral-800 flex items-center justify-between text-xs text-neutral-400">
+                  <span>Mentorship Team Alpha</span>
+                  <span>Review Complete</span>
+                </div>
+              )}
+            </div>
+
+          </div>
+        </section>
+      )}
+
+      {/* Booking, About, FAQs and Commissioning Form */}
+      {activeTab === 'contact' && (
+        <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto space-y-16">
+          
+          <div className="text-center">
+            <span className="text-amber-500 font-bold uppercase tracking-widest text-xs">Our Studio</span>
+            <h1 className="text-3xl md:text-5xl font-extrabold mt-1 tracking-tight">ABOUT & CONTACT</h1>
+            <p className="text-neutral-400 text-sm max-w-xl mx-auto mt-2 leading-relaxed">
+              Step inside Aperture Artistry. Learn about our passion for the visual craft, locate our physical gallery, or schedule your next high-production commission.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            
+            {/* LEFT COLUMN: About Us & Coordinates */}
+            <div className="lg:col-span-5 space-y-8">
+              
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 space-y-4">
+                <h2 className="text-2xl font-bold tracking-tight text-white uppercase">The Studio Story</h2>
+                <p className="text-sm text-neutral-300 leading-relaxed">
+                  Founded in 2018, Aperture Artistry began with a single mission: to frame fleeting moments with dramatic technical precision. We merge classic physical composition parameters with state-of-the-art optical sensors.
+                </p>
+                <p className="text-sm text-neutral-400 leading-relaxed">
+                  Whether chasing the pristine early-morning mist across alpine crests or configuring high-fashion chiaroscuro shadows in the studio, our photographers prioritize emotion and micro-contrast.
+                </p>
+
+                <div className="pt-4 border-t border-neutral-850 space-y-4">
+                  <span className="text-xs font-bold uppercase tracking-widest text-neutral-500 block">Lead Artists</span>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden border border-amber-500/50">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Marcus" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-sm text-white">Marcus Vance</div>
+                        <div className="text-[10px] text-neutral-400">Principal Landscapes</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden border border-amber-500/50">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Elena" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-sm text-white">Elena Rostova</div>
+                        <div className="text-[10px] text-neutral-400">Artistic Portrait Director</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 space-y-4">
+                <h3 className="text-lg font-bold tracking-tight text-white uppercase">Studio Coordinates</h3>
+                
+                <div className="space-y-4 text-sm text-neutral-300">
+                  <div className="flex items-start space-x-3">
+                    <div className="mt-0.5"><Icons.MapPin /></div>
+                    <div>
+                      <p className="font-semibold text-white">Aperture Headquarters</p>
+                      <p className="text-neutral-400 text-xs mt-0.5">842 Lightwave Blvd, Suite 400<br />San Francisco, CA 94107</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <div className="mt-0.5"><Icons.Phone /></div>
+                    <div>
+                      <p className="font-semibold text-white">Direct Line</p>
+                      <p className="text-neutral-400 text-xs mt-0.5">+1 (415) 555-0198</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <div className="mt-0.5"><Icons.Clock /></div>
+                    <div>
+                      <p className="font-semibold text-white">Hours of Operation</p>
+                      <p className="text-neutral-400 text-xs mt-0.5">Monday – Friday: 9:00 AM – 6:00 PM PST<br />Weekend Sessions by Appointment Only</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* RIGHT COLUMN: Contact / Commission Booking Form */}
+            <div className="lg:col-span-7 bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Commission Studio Work</h2>
+                <p className="text-xs text-neutral-400 mt-1">Submit your details to receive customized layout options and schedule a creative consult.</p>
+              </div>
+
+              {formSubmitted ? (
+                <div className="text-center py-10 space-y-4">
+                  <div className="w-16 h-16 bg-green-500 text-neutral-950 rounded-full flex items-center justify-center mx-auto">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Commission Query Sent Successfully!</h3>
+                  <p className="text-sm text-neutral-400 max-w-md mx-auto">
+                    Our professional curation desk will review your details, equipment parameters, and proposed timeline options, returning an outline within 12 hours.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setFormSubmitted(false);
+                      setContactForm({ name: "", email: "", tier: "Standard Studio", details: "" });
+                    }}
+                    className="px-6 py-2 bg-neutral-800 hover:bg-neutral-750 text-white rounded-lg text-xs uppercase tracking-widest transition-colors"
+                  >
+                    Submit Another Inquiry
+                  </button>
+                </div>
+              ) : (
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setFormSubmitted(true);
+                  }}
+                  className="space-y-6"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="block text-xs uppercase tracking-wider text-neutral-400 font-bold">Your Name</label>
+                      <input 
+                        type="text" 
+                        required
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        placeholder="e.g. John Doe"
+                        className="w-full bg-neutral-950 border border-neutral-850 rounded-xl p-3 text-sm text-neutral-100 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-xs uppercase tracking-wider text-neutral-400 font-bold">Email Address</label>
+                      <input 
+                        type="email" 
+                        required
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        placeholder="e.g. john@domain.com"
+                        className="w-full bg-neutral-950 border border-neutral-850 rounded-xl p-3 text-sm text-neutral-100 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-xs uppercase tracking-wider text-neutral-400 font-bold">Project Tier Selector</label>
+                    <select 
+                      value={contactForm.tier}
+                      onChange={(e) => setContactForm({ ...contactForm, tier: e.target.value })}
+                      className="w-full bg-neutral-950 border border-neutral-850 rounded-xl p-3 text-sm text-neutral-100 focus:outline-none focus:border-amber-500"
+                    >
+                      <option value="Commercial Campaign">Commercial Campaign (Full Day, Multi-Camera Setup)</option>
+                      <option value="Standard Studio">Standard Studio Shoot (3-Hours Outdoor Portrait/Product)</option>
+                      <option value="Landscape Licensing">Exhibition Print License & Digital Rights Buyouts</option>
+                      <option value="Custom Project">Custom Expedition / Special Art Project</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-xs uppercase tracking-wider text-neutral-400 font-bold">Project Goals & Location Details</label>
+                    <textarea 
+                      rows={5}
+                      required
+                      value={contactForm.details}
+                      onChange={(e) => setContactForm({ ...contactForm, details: e.target.value })}
+                      placeholder="Provide a description of your expectations, desired location, lighting mood, or delivery format..."
+                      className="w-full bg-neutral-950 border border-neutral-850 rounded-xl p-3 text-sm text-neutral-100 focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-extrabold uppercase tracking-widest text-xs rounded-xl transition-all shadow-lg shadow-amber-500/10"
+                  >
+                    Send Commission Proposal
+                  </button>
+                </form>
+              )}
+            </div>
+
+          </div>
+
+          {/* Interactive FAQs Accordion */}
+          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 max-w-4xl mx-auto space-y-6">
+            <div className="text-center md:text-left">
+              <h3 className="text-xl font-bold text-white uppercase tracking-tight">Studio Frequently Asked Questions</h3>
+              <p className="text-xs text-neutral-400 mt-1">Get immediate answers to logistics, gear, and licensing rights.</p>
+            </div>
+
+            <div className="divide-y divide-neutral-800">
+              {[
+                {
+                  q: "What camera platforms does your studio use for client commissions?",
+                  a: "We shoot primarily with high-resolution medium format systems (Hasselblad X2D) and full-frame high-speed bodies (Sony α7R V), paired exclusively with calibrated G-Master and Zeiss prime optics."
+                },
+                {
+                  q: "Are digital licensing and print rights included in portrait sessions?",
+                  a: "Yes. All standard commissions include digital web-rights delivery. Commercial campaigns and premium architectural commissions can be structured with broad physical print licensing or outright copyright buyouts."
+                },
+                {
+                  q: "Can you travel outside California for outdoor adventure landscape commissions?",
+                  a: "Absolutely. Marcus and our landscape expedition crew can book custom national and international travel. Simply select 'Custom Project' on our commission form to coordinate the logistics."
+                }
+              ].map((faq, idx) => (
+                <div key={idx} className="py-4 first:pt-0 last:pb-0">
+                  <button 
+                    onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
+                    className="w-full flex justify-between items-center text-left text-sm md:text-base font-bold text-white hover:text-amber-400 transition-colors focus:outline-none"
+                  >
+                    <span>{faq.q}</span>
+                    <span className="text-amber-500 text-xl font-mono ml-4">
+                      {openFaqIndex === idx ? '−' : '+'}
+                    </span>
+                  </button>
+                  {openFaqIndex === idx && (
+                    <p className="mt-3 text-xs md:text-sm text-neutral-400 leading-relaxed transition-all">
+                      {faq.a}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </section>
+      )}
+
+      {/* Lightbox Modal for Artworks */}
+      {lightboxImage && (
+        <div className="fixed inset-0 z-50 bg-neutral-950/95 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative max-w-5xl w-full bg-neutral-900 rounded-3xl overflow-hidden border border-neutral-800 shadow-2xl flex flex-col md:flex-row">
+            
+            <div className="flex-1 bg-black flex items-center justify-center aspect-[4/3] md:aspect-auto">
+              <img src={lightboxImage.url} alt={lightboxImage.title} className="max-h-[70vh] object-contain w-full" />
+            </div>
+
+            <div className="w-full md:w-80 p-6 flex flex-col justify-between border-t md:border-t-0 md:border-l border-neutral-850 space-y-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider">
+                      {lightboxImage.category} Collection
+                    </span>
+                    <h3 className="text-2xl font-bold text-white mt-0.5">{lightboxImage.title}</h3>
+                  </div>
+                  <button 
+                    onClick={() => setLightboxImage(null)}
+                    className="p-1 rounded-lg hover:bg-neutral-800 text-neutral-400 hover:text-white"
+                  >
+                    <Icons.Close />
+                  </button>
+                </div>
+
+                <p className="text-sm text-neutral-300 leading-relaxed">
+                  {lightboxImage.description}
+                </p>
+
+                <div className="p-3 bg-neutral-950 rounded-xl border border-neutral-850 space-y-2">
+                  <span className="text-[10px] uppercase tracking-wider text-neutral-500 block">Exif Calibration</span>
+                  <div className="grid grid-cols-2 gap-2 text-xs font-mono text-neutral-300">
+                    <div>
+                      <span className="text-neutral-500 block text-[10px]">Aperture</span>
+                      <span className="font-bold text-amber-400">{lightboxImage.settings.aperture}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500 block text-[10px]">Shutter</span>
+                      <span className="font-bold text-amber-400">{lightboxImage.settings.shutter}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500 block text-[10px]">ISO</span>
+                      <span className="font-bold text-amber-400">{lightboxImage.settings.iso}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500 block text-[10px]">Lens</span>
+                      <span className="font-bold text-amber-400">{lightboxImage.settings.lens}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <button
+                  onClick={() => {
+                    setSelectedCritiqueImage(lightboxImage);
+                    setActiveTab('critique');
+                    setLightboxImage(null);
+                  }}
+                  className="w-full py-2.5 bg-neutral-850 hover:bg-neutral-800 text-white rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center space-x-2 transition-all border border-neutral-800"
+                >
+                  <Icons.Cpu />
+                  <span>Critique with Gemini</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setLightboxImage(null);
+                    setActiveTab('contact');
+                  }}
+                  className="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-black rounded-xl text-xs font-bold uppercase tracking-widest text-center block transition-all"
+                >
+                  Inquire Licensing
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Elegant minimalist footer */}
+      <footer className="border-t border-neutral-900 py-12 px-4 md:px-8 mt-20">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="text-center md:text-left space-y-1">
+            <div className="flex items-center justify-center md:justify-start space-x-2">
+              <span className="text-amber-500 font-black tracking-widest text-md uppercase">APERTURE STUDIO</span>
+            </div>
+            <p className="text-xs text-neutral-500">
+              © 2026 Aperture Artistry. Powered by highly advanced digital camera optics & Google Gemini.
+            </p>
+          </div>
+
+          <div className="flex space-x-6">
+            <button onClick={() => setActiveTab('home')} className="text-xs text-neutral-400 hover:text-white uppercase tracking-widest">Exhibition</button>
+            <button onClick={() => setActiveTab('simulator')} className="text-xs text-neutral-400 hover:text-white uppercase tracking-widest">DSLR Sandbox</button>
+            <button onClick={() => setActiveTab('critique')} className="text-xs text-neutral-400 hover:text-white uppercase tracking-widest">Gemini Mentor</button>
+            <button onClick={() => setActiveTab('contact')} className="text-xs text-neutral-400 hover:text-white uppercase tracking-widest">About & Contact</button>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+}
